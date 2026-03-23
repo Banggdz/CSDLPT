@@ -1,6 +1,6 @@
 ✅1.So sánh Đồng bộ (Replication) là "Copy", Linked Server là "Cầu nối"
 Replication: Giúp dữ liệu từ máy Cha đẻ ra một bản sao ở máy Con. 
-Khi bạn truy vấn ở máy Con, bạn đang đọc dữ liệu nằm ngay tại ổ cứng của máy Con. Khi cập nhật các bảng ở con sẽ tự đồng bộ lên server cha (nếu chọn Merge Replication)
+Khi bạn truy vấn ở máy Con, bạn đang đọc dữ liệu nằm ngay tại ổ cứng của máy Con. Khi cập nhật các bảng ở con sẽ tự đồng bộ lên server cha (nếu chọn Merge publication)
 
 Linked Server: Giúp bạn đứng ở máy này nhưng điều khiển/truy vấn dữ liệu ở máy kia một cách trực tiếp mà không cần copy về.
 
@@ -23,3 +23,6 @@ Dữ liệu doanh thu ở máy Con 2 chỉ là của Chi nhánh 2.
 
 ✅4. Giải quyết bài toán "Cập nhật tức thời" (Real-time)
 Replication có độ trễ (vài giây đến vài phút tùy cấu hình). Nếu bạn cần một thao tác mà máy Cha sửa cái máy Con phải thấy ngay lập tức trong 0.1 giây (ví dụ: khóa tài khoản nhân viên khẩn cấp), người ta thường dùng Linked Server để thực hiện lệnh trực tiếp sang máy kia.
+
+Tình huống thực tế: Một khách hàng đến Chi nhánh 1 hỏi mua áo Nike. Nhân viên Chi nhánh 1 (đang dùng máy con SERVER_1) cần biết Chi nhánh 2 còn hàng không. 
+Lúc này, máy con SERVER_1 phải dùng Linked Server để "hỏi" trực tiếp Chi nhánh 2 hoặc máy cha.
