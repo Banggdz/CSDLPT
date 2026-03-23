@@ -1,0 +1,22 @@
+✅1.So sánh Đồng bộ (Replication) là "Copy", Linked Server là "Cầu nối"
+Replication: Giúp dữ liệu từ máy Cha đẻ ra một bản sao ở máy Con. 
+Khi bạn truy vấn ở máy Con, bạn đang đọc dữ liệu nằm ngay tại ổ cứng của máy Con. Khi cập nhật các bảng ở con sẽ tự đồng bộ lên server cha (nếu chọn Merge Replication)
+
+Linked Server: Giúp bạn đứng ở máy này nhưng điều khiển/truy vấn dữ liệu ở máy kia một cách trực tiếp mà không cần copy về.
+
+✅2. Dùng cho các truy vấn "Xuyên mảnh" (Distributed Queries)
+Giả sử thầy cô yêu cầu bạn làm một chức năng: "Kiểm tra xem mặt hàng Áo thun Nike còn ở các chi nhánh khác không?"
+
+Nếu không có Linked Server, máy Con 1 chỉ biết hàng của nó. Nó không có cách nào tự nhìn vào database của máy Con 2 hay máy Cha để biết số lượng tồn kho bên đó.
+
+Giải pháp: Bạn dùng Linked Server để đứng từ máy Con 1, "phóng tầm mắt" sang máy Con 2:
+
+SQL
+SELECT SoLuong FROM [LINK_S2].[shop_clothing_store2].[dbo].[Inventory] WHERE ProductID = 'AoThun'
+
+✅ 3. Dùng cho các Store Procedure (SP) tổng hợp
+
+Dữ liệu doanh thu ở máy Con 1 chỉ là của Chi nhánh 1.
+Dữ liệu doanh thu ở máy Con 2 chỉ là của Chi nhánh 2.
+
+Để ra con số tổng, bạn phải viết một đoạn code trên máy Cha (hoặc máy Con) sử dụng Linked Server để SUM dữ liệu từ tất cả các trạm lại với nhau trong cùng một câu lệnh
