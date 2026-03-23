@@ -6,7 +6,7 @@ Vào replicaiton /local publications /chọn db phân tán/ view synchronization
 ❌ Lỗi 1: Login failed for user 'NT Service\SQLAgent$MAIN': Đây là lỗi quan trọng nhất. Tài khoản chạy dịch vụ SQL Agent của máy con (MAIN) không có quyền đăng nhập vào máy cha để lấy dữ liệu.
 ❌ Lỗi 2: The process could not connect to Subscriber: Hệ thống không thiết lập được kết nối giữa hai bên do vấn đề phân quyền.
 
-Bước 1: Cấp quyền Login trên máy Cha
+Bước 1: Cấp quyền Login trên máy cha cho máy con và ngược lại
 
 Tại máy Cha, mở Security -> Logins.
 Chuột phải vào Logins -> New Login...
@@ -14,6 +14,12 @@ Chuột phải vào Logins -> New Login...
 
 Tại mục Server Roles, bạn hãy tích chọn vào ô sysadmin.
 Quyền này cho phép SQL Agent truy cập vào các tài nguyên hệ thống để copy dữ liệu từ server cha sang server con mà không bị chặn bởi các rào cản bảo mật.
+
+Tại máy CHA (MAIN): Bạn cần thêm Login của máy CON (NT SERVICE\SQLAgent$SERVER_1) và cấp quyền db_owner trên database gốc.
+Tại máy CON (SERVER_1): Bạn cần thêm Login của máy CHA (NT SERVICE\SQLAgent$MAIN) và cấp quyền db_owner trên database phân mảnh.
+
+⚠️ Vì khi đồng bộ, Agent của máy này sẽ sang "gõ cửa" máy kia để lấy dữ liệu về hoặc đẩy dữ liệu đi. 
+    Nếu không có Login và quyền db_owner, cửa sẽ bị khóa (Lỗi Access Denied).
 
 👉 2. Phải đảm bảo SQL Server Agent máy cha và con phải chạy
 
