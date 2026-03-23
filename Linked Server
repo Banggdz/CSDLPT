@@ -14,9 +14,12 @@ Giải pháp: Bạn dùng Linked Server để đứng từ máy Con 1, "phóng t
 SQL
 SELECT SoLuong FROM [LINK_S2].[shop_clothing_store2].[dbo].[Inventory] WHERE ProductID = 'AoThun'
 
-✅ 3. Dùng cho các Store Procedure (SP) tổng hợp
+✅3. Dùng cho các Store Procedure (SP) tổng hợp
 
 Dữ liệu doanh thu ở máy Con 1 chỉ là của Chi nhánh 1.
 Dữ liệu doanh thu ở máy Con 2 chỉ là của Chi nhánh 2.
 
 Để ra con số tổng, bạn phải viết một đoạn code trên máy Cha (hoặc máy Con) sử dụng Linked Server để SUM dữ liệu từ tất cả các trạm lại với nhau trong cùng một câu lệnh
+
+✅4. Giải quyết bài toán "Cập nhật tức thời" (Real-time)
+Replication có độ trễ (vài giây đến vài phút tùy cấu hình). Nếu bạn cần một thao tác mà máy Cha sửa cái máy Con phải thấy ngay lập tức trong 0.1 giây (ví dụ: khóa tài khoản nhân viên khẩn cấp), người ta thường dùng Linked Server để thực hiện lệnh trực tiếp sang máy kia.
