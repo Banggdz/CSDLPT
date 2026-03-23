@@ -1,0 +1,31 @@
+✅ 1. Kiểm tra file tồn tại không
+
+Vào server, check:
+
+C:\Program Files\Microsoft SQL Server\170\COM\
+
+👉 Ở đây bắt buộc phải có:
+
+snapshot.exe
+logread.exe
+distrib.exe
+👉 Nếu KHÔNG có → chắc chắn lỗi do thiếu component
+
+🛠️ Cách fix chuẩn (bắt buộc)
+Mở:
+SQL Server Installation Center
+Chọn:
+Maintenance → Repair
+Chọn instance:
+SQL2026_SERVER_3
+
+👉 Repair sẽ:
+
+Cài lại toàn bộ missing binaries
+Fix đúng case của bạn
+
+
+✅ 2. Cấp quyền cho SQL Agent
+
+"C:\Program Files\Microsoft SQL Server\MSSQL17.MAIN\MSSQL\repldata"
+vào thuộc tính → security → thêm Everyone
