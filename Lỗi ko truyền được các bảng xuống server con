@@ -1,0 +1,26 @@
+cấu hình Publication trên server(chính) BANGG\MAIN và trỏ Subscription về đúng server(con) BANGG\SQL2026_SERVER_1.
+
+Vào replicaiton /local publications /chọn db phân tán/ view synchronization status để xem lỗi cũng như run lại khi lỗi
+
+👉 1. Phân tích lỗi
+❌ Lỗi 1: Login failed for user 'NT Service\SQLAgent$MAIN': Đây là lỗi quan trọng nhất. Tài khoản chạy dịch vụ SQL Agent của máy con (MAIN) không có quyền đăng nhập vào máy cha để lấy dữ liệu.
+❌ Lỗi 2: The process could not connect to Subscriber: Hệ thống không thiết lập được kết nối giữa hai bên do vấn đề phân quyền.
+
+Bước 1: Cấp quyền Login trên máy Cha
+
+Tại máy Cha, mở Security -> Logins.
+Chuột phải vào Logins -> New Login...
+Ở ô Login name, bạn nhập tên: NT SERVICE\SQLAgent$MAIN (lấy tên ở SQL Server Agent -> Properties -> General -> Service account).
+
+Tại mục Server Roles, bạn hãy tích chọn vào ô sysadmin.
+Quyền này cho phép SQL Agent truy cập vào các tài nguyên hệ thống để copy dữ liệu từ server cha sang server con mà không bị chặn bởi các rào cản bảo mật.
+
+👉 2. Phải đảm bảo SQL Server Agent máy cha và con phải chạy
+
+👉 3. Đảm bảo chỉnh quyền everyone hoặc tên kia trong:
+C:\Program Files\Microsoft SQL Server\MSSQL17.SERVER_MAIN\MSSQL\repldata
+
+Bước 1: Chuột phải vào thư mục ReplData -> chọn Properties.
+Bước 2: Chọn tab Security -> Nhấn Edit -> Nhấn Add.
+Bước 3: Nhập Everyone (hoặc Service  Account của các server con) rồi nhấn OK.
+Bước 4: Tích vào ô Full Control cho Everyone rồi nhấn OK để lưu lại.
