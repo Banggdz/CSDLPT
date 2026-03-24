@@ -73,3 +73,6 @@ Phân quyền: Chi nhánh 2 không có toàn bộ dữ liệu của Chi nhánh 1
             Vì vậy, cách duy nhất để "nhìn" sang nhà hàng xóm là dùng Linked Server.
 
 Điểm đồ án: Thầy cô sẽ hỏi: "Làm sao em biết server kia còn hàng?". Nếu bạn trả lời "Em dùng Linked Server truy vấn trực tiếp" thì đó là câu trả lời chuẩn nhất của môn học này.
+
+Lỗi
+❌ SSL Provider: The certificate chain was issued by an authority that is not trusted.
