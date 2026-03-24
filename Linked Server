@@ -32,6 +32,8 @@ Bạn chạy đoạn code này tại máy con SERVER_2:
 SQL
 USE [master]
 GO
+EXEC sp_dropserver 'LINK_S2_TO_S1', 'droplogins';
+GO
 -- 1. Khai báo Linked Server
 EXEC sp_addlinkedserver 
     @server = N'LINK_S2_TO_S1',           -- Tên thể hiện rõ: Từ S2 sang S1
@@ -52,20 +54,27 @@ EXEC sp_addlinkedsrvlogin
 EXEC sp_serveroption 'LINK_S2_TO_S1', 'rpc', 'true';
 EXEC sp_serveroption 'LINK_S2_TO_S1', 'rpc out', 'true';
 GO
+
 Bước 2: Viết truy vấn kiểm tra tồn kho
 Sau khi đã có "cầu" LINK_S2, nhân viên tại Chi nhánh 1 chỉ cần chạy câu lệnh sau để check kho bên Chi nhánh 2:
 
 SQL
--- Tìm số lượng tồn kho của áo Nike (giả sử id sản phẩm là 1) tại Chi nhánh 2
+🔹-- Tìm số lượng tồn kho của áo Nike (giả sử id sản phẩm là 1) tại Chi nhánh 1
 SELECT 
     P.name AS TenSanPham,
     PV.color,
     PV.size,
     I.quantity AS SoLuongTon_Tai_CN2
-FROM [LINK_S2_TO_S1].[shop_clothing_store2].[dbo].[Inventory] I
-JOIN [LINK_S2_TO_S1].[shop_clothing_store2].[dbo].[ProductVariant] PV ON I.variant_id = PV.id
-JOIN [LINK_S2_TO_S1].[shop_clothing_store2].[dbo].[Product] P ON PV.product_id = P.id
+FROM [LINK_S2_TO_S1].[shop_clothing_store1].[dbo].[Inventory] I
+JOIN [LINK_S2_TO_S1].[shop_clothing_store1].[dbo].[ProductVariant] PV ON I.variant_id = PV.id
+JOIN [LINK_S2_TO_S1].[shop_clothing_store1].[dbo].[Product] P ON PV.product_id = P.id
 WHERE P.name LIKE N'%Nike%' AND I.quantity > 0;
+
+🔹-- Đứng ở S2, lấy danh sách nhân viên của S1
+SELECT * FROM [LINK_S2_TO_S1].[shop_clothing_store1].[dbo].[Employee]
+
+(shop_clothing_store1 là database của Server_1)
+
 Tại sao phải viết phức tạp như vậy?
 Tính thời gian thực: Replication có thể bị trễ vài giây. Nếu khách đang đứng ở quầy, dùng Linked Server sẽ cho kết quả chính xác 100% tại thời điểm đó.
 
