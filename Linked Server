@@ -76,3 +76,10 @@ Phân quyền: Chi nhánh 2 không có toàn bộ dữ liệu của Chi nhánh 1
 
 Lỗi
 ❌ SSL Provider: The certificate chain was issued by an authority that is not trusted.
+
+👉 FIX:
+B1: Xem Linked Server LINK_S2_TO_S1 của bạn đang sử dụng Provider nào:
+    Tại máy SERVER_2, mở rộng mục Server Objects > Linked Servers.
+    Chuột phải vào tên Linked Server LINK_S2_TO_S1.
+    Chọn Properties.
+    Ở ngay trang General, bên phải sẽ thấy dòng Provider. (vd: Microsoft Office 12.0 Access Database Engine OLE DB Provide)
