@@ -24,5 +24,52 @@ Dữ liệu doanh thu ở máy Con 2 chỉ là của Chi nhánh 2.
 ✅4. Giải quyết bài toán "Cập nhật tức thời" (Real-time)
 Replication có độ trễ (vài giây đến vài phút tùy cấu hình). Nếu bạn cần một thao tác mà máy Cha sửa cái máy Con phải thấy ngay lập tức trong 0.1 giây (ví dụ: khóa tài khoản nhân viên khẩn cấp), người ta thường dùng Linked Server để thực hiện lệnh trực tiếp sang máy kia.
 
-Tình huống thực tế: Một khách hàng đến Chi nhánh 1 hỏi mua áo Nike. Nhân viên Chi nhánh 1 (đang dùng máy con SERVER_1) cần biết Chi nhánh 2 còn hàng không. 
-Lúc này, máy con SERVER_1 phải dùng Linked Server để "hỏi" trực tiếp Chi nhánh 2 hoặc máy cha.
+✅Tình huống thực tế: Một khách hàng đến Chi nhánh 2 hỏi mua áo Nike. Nhân viên Chi nhánh 2 (đang dùng máy con SERVER_1) cần biết Chi nhánh 2 còn hàng không. 
+Lúc này, máy con SERVER_2 phải dùng Linked Server để "hỏi" trực tiếp Chi nhánh 1 hoặc máy cha.
+Bước 1: Tạo Linked Server từ SERVER_2 tới SERVER_1
+Bạn chạy đoạn code này tại máy con SERVER_2:
+
+SQL
+USE [master]
+GO
+-- 1. Khai báo Linked Server
+EXEC sp_addlinkedserver 
+    @server = N'LINK_S2_TO_S1',           -- Tên thể hiện rõ: Từ S2 sang S1
+    @srvproduct = N'', 
+    @provider = N'SQLNCLI', 
+    @datasrc = N'BANGG\SQL2026_SERVER_1'; -- Đích đến là máy SERVER_1
+
+
+-- 2. Cấu hình quyền đăng nhập (Dùng sa cho chắc chắn trong đồ án)
+EXEC sp_addlinkedsrvlogin 
+    @rmtsrvname = N'LINK_S2_TO_S1', 
+    @useself = N'False', 
+    @locallogin = NULL, 
+    @rmtuser = N'sa', 
+    @rmtpassword = N'123456'; 
+
+-- 3. Bật quyền RPC để chạy được Store Procedure từ xa sau này
+EXEC sp_serveroption 'LINK_S2_TO_S1', 'rpc', 'true';
+EXEC sp_serveroption 'LINK_S2_TO_S1', 'rpc out', 'true';
+GO
+Bước 2: Viết truy vấn kiểm tra tồn kho
+Sau khi đã có "cầu" LINK_S2, nhân viên tại Chi nhánh 1 chỉ cần chạy câu lệnh sau để check kho bên Chi nhánh 2:
+
+SQL
+-- Tìm số lượng tồn kho của áo Nike (giả sử id sản phẩm là 1) tại Chi nhánh 2
+SELECT 
+    P.name AS TenSanPham,
+    PV.color,
+    PV.size,
+    I.quantity AS SoLuongTon_Tai_CN2
+FROM [LINK_S2_TO_S1].[shop_clothing_store2].[dbo].[Inventory] I
+JOIN [LINK_S2_TO_S1].[shop_clothing_store2].[dbo].[ProductVariant] PV ON I.variant_id = PV.id
+JOIN [LINK_S2_TO_S1].[shop_clothing_store2].[dbo].[Product] P ON PV.product_id = P.id
+WHERE P.name LIKE N'%Nike%' AND I.quantity > 0;
+Tại sao phải viết phức tạp như vậy?
+Tính thời gian thực: Replication có thể bị trễ vài giây. Nếu khách đang đứng ở quầy, dùng Linked Server sẽ cho kết quả chính xác 100% tại thời điểm đó.
+
+Phân quyền: Chi nhánh 2 không có toàn bộ dữ liệu của Chi nhánh 1 (do bạn đã lọc Filter khi phân tán). 
+            Vì vậy, cách duy nhất để "nhìn" sang nhà hàng xóm là dùng Linked Server.
+
+Điểm đồ án: Thầy cô sẽ hỏi: "Làm sao em biết server kia còn hàng?". Nếu bạn trả lời "Em dùng Linked Server truy vấn trực tiếp" thì đó là câu trả lời chuẩn nhất của môn học này.
