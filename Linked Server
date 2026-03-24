@@ -24,7 +24,7 @@ Dữ liệu doanh thu ở máy Con 2 chỉ là của Chi nhánh 2.
 ✅4. Giải quyết bài toán "Cập nhật tức thời" (Real-time)
 Replication có độ trễ (vài giây đến vài phút tùy cấu hình). Nếu bạn cần một thao tác mà máy Cha sửa cái máy Con phải thấy ngay lập tức trong 0.1 giây (ví dụ: khóa tài khoản nhân viên khẩn cấp), người ta thường dùng Linked Server để thực hiện lệnh trực tiếp sang máy kia.
 
-✅Tình huống thực tế: Một khách hàng đến Chi nhánh 2 hỏi mua áo Nike. Nhân viên Chi nhánh 2 (đang dùng máy con SERVER_1) cần biết Chi nhánh 2 còn hàng không. 
+✅Tình huống thực tế: Một khách hàng đến Chi nhánh 2 hỏi mua áo Nike. Nhân viên Chi nhánh 2 (đang dùng máy con SERVER_2) cần biết Chi nhánh 2 còn hàng không. 
 Lúc này, máy con SERVER_2 phải dùng Linked Server để "hỏi" trực tiếp Chi nhánh 1 hoặc máy cha.
 Bước 1: Tạo Linked Server từ SERVER_2 tới SERVER_1
 Bạn chạy đoạn code này tại máy con SERVER_2:
