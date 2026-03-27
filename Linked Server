@@ -39,8 +39,8 @@ EXEC sp_addlinkedserver
     @server = N'LINK_S2_TO_S1',           -- Tên thể hiện rõ: Từ S2 sang S1
     @srvproduct = N'', 
     @provider = N'SQLNCLI', 
-    @datasrc = N'BANGG\SQL2026_SERVER_1'; -- Đích đến là máy SERVER_1
-
+    @datasrc = N'BANGG\SQL2026_SERVER_1', -- Đích đến là máy SERVER_1
+	@provstr = 'Encrypt=yes;TrustServerCertificate=yes';
 
 -- 2. Cấu hình quyền đăng nhập (Dùng sa cho chắc chắn trong đồ án)
 EXEC sp_addlinkedsrvlogin 
