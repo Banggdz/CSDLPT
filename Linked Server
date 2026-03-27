@@ -94,18 +94,8 @@ B1: Xem Linked Server LINK_S2_TO_S1 của bạn đang sử dụng Provider nào:
     Ở ngay trang General, bên phải sẽ thấy dòng Provider. (vd: Microsoft Office 12.0 Access Database Engine OLE DB Provide)
 B2: Cấu hình bỏ qua xác thực chứng chỉ (Trust Server Certificate)
 Dù bạn đang dùng Provider nào (như SQL Server Native Client hay OLE DB), cách xử lý chung là ép Linked Server tin tưởng chứng chỉ của máy đích.
+Tại cửa sổ Linked Servers/ Providers/ vd:[Microsoft.ACE.OLEDB.12.0] -> properties -> tick Dynamic parameter
 
-Tại cửa sổ Linked Server Properties bạn đang mở, chọn trang Provider Options (nằm dưới trang General hoặc trong mục Providers ở ngoài danh sách).
-
-Tìm thuộc tính có tên TrustServerCertificate.
-
-Chỉnh giá trị từ False thành True.
-
-Nếu không thấy mục trên, hãy sang trang Properties > Connection Options. Trong ô Provider String, bạn dán thêm dòng sau vào cuối:
-
-;TrustServerCertificate=yes;
-
-Nhấn OK.
 
 B3: Kiểm tra thiết lập bảo mật (Nếu B2 chưa được)
 Nếu lỗi vẫn còn, bạn cần kiểm tra lại tài khoản dùng để kết nối giữa 2 máy:
@@ -116,18 +106,8 @@ Vẫn tại cửa sổ Properties, chọn trang Security.
 
 Nhập chính xác Remote login (thường là sa) và mật khẩu của máy SERVER_1.
 
-B4: Kiểm tra SQL Server Configuration Manager
-Đôi khi lỗi này do giao thức mã hóa trên máy chủ chưa được bật đồng bộ:
 
-Mở SQL Server Configuration Manager trên cả 2 máy.
-
-Mở rộng SQL Server Network Configuration > Protocols for MSSQLSERVER (hoặc tên Instance của bạn như SERVER_3).
-
-Chuột phải vào Flags > Properties.
-
-Đảm bảo mục Force Encryption đang để là No. (Nếu để Yes mà không có chứng chỉ xịn là sẽ bị lỗi SSL ngay).
-
-B5: Test lại kết nối
+B4: Test lại kết nối
 Chuột phải vào LINK_S2_TO_S1.
 
 Chọn Test Connection.
